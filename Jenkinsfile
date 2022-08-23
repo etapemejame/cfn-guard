@@ -19,7 +19,9 @@ pipeline {
                     sh "sudo apt install build-essential -y"
                     sh "curl -o /tmp/sh.rustup.rs -sSf https://sh.rustup.rs && sh /tmp/sh.rustup.rs -y"
                     sh 'source "$HOME/.cargo/env"'
-                    sh "cargo install cfn-guard"
+                    sh "curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/aws-cloudformation/cloudformation-guard/main/install-guard.sh | sh"
+                    sh "cp ~/.guard/bin/cfn-guard /usr/local/bin"
+                    sh "export PATH=$PATH:~/.guard/bin/"
                     sh "cfn-guard --version"
                 }
             }
