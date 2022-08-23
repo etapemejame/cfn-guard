@@ -1,7 +1,7 @@
 // Pipeline starts here
 
 pipeline {
-    agent {}
+    agent {label 'multitenant'}
     options {
         timestamps()
     }
