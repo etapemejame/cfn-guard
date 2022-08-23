@@ -22,6 +22,7 @@ pipeline {
                     sh "sudo cp ~/.guard/bin/cfn-guard /usr/local/bin"
                     sh "export PATH=$PATH:~/.guard/bin/"
                     sh "cfn-guard --version"
+                    sh "cfn-guard --help"
                 }
             }
         }
