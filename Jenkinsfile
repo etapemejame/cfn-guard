@@ -1,10 +1,9 @@
 // Pipeline starts here
 
 pipeline {
-    agent {any}
+    agent any
     options {
         timestamps()
-        ansiColor('xterm')
     }
     stages 
     {
