@@ -18,6 +18,7 @@ pipeline {
                     sh "sudo apt install curl -y"
                     sh "sudo apt install build-essential -y"
                     sh "curl -o /tmp/sh.rustup.rs -sSf https://sh.rustup.rs && sh /tmp/sh.rustup.rs -y"
+                    sh 'source "$HOME/.cargo/env"'
                     sh "cargo install cfn-guard"
                     sh "cfn-guard --version"
                 }
