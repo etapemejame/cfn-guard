@@ -1,7 +1,7 @@
 // Pipeline starts here
 
 pipeline {
-    agent node
+    agent {...}
     options {
         timestamps()
     }
