@@ -12,7 +12,7 @@ pipeline {
             steps
             {
                 script 
-                {
+                {   checkout scm
                     echo "Hello World. This is a test Jenkins Pipeline"
                     sh "sudo yum update"
                     sh "sudo yum install curl -y"
