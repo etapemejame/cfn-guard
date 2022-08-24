@@ -1,0 +1,11 @@
+--- 
+Resources:
+  OSDomain:
+    Type: AWS::OpenSearchService::Domain
+    Properties:
+      Tags:
+        - Key: Services 
+          Value: ""
+        - Key: Owner 
+          Value: ""
+  
