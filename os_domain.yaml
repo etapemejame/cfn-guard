@@ -4,7 +4,7 @@ Resources:
     Type: AWS::OpenSearchService::Domain
     Properties:
       Tags:
-        - Key: Services 
+        - Key: Service 
           Value: ""
         - Key: Owner 
           Value: ""
