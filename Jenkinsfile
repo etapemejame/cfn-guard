@@ -1,5 +1,10 @@
 // Pipeline starts here
 
+def changedFiles = pullRequest.files.collect {
+        it.getFilename()
+    }
+    println "${changedFiles}"
+
 pipeline {
     agent any
     options {
@@ -7,18 +12,6 @@ pipeline {
     }
     stages 
     {
-        stage('get-filename')
-        {
-            steps {
-                script{
-                    node{
-                        def changedFiles = pullRequest.files.collect {
-                            it.getFilename()
-                        }
-                    }
-                }
-            }
-        }
         stage('Hello')
         {
             steps
