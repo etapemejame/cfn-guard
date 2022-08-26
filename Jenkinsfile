@@ -1,3 +1,6 @@
+#!groovy
+import org.jenkinci.plugins.pipeline.modeldefinition.Utils
+
 // Pipeline starts here
 
 def changedFiles = pullRequest.files.collect {
