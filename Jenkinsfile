@@ -2,6 +2,8 @@
 import org.jenkinci.plugins.pipeline.modeldefinition.Utils
 
 // Pipeline starts here
+
+def base_branch = 'main'
 pipeline {
     agent any
     options {
@@ -13,12 +15,13 @@ pipeline {
         {
             stage('print-filename') {
                 script {
-                    def changedFiles = pullRequest.files.collect {
-                            it.getFilename()
-                        }
-                        println "${changedFiles}"
-
+                    sh script: "git fetch origin --no-tags ${base_branch}", label: "Getting base branch"
+                    def git_diff = sh (
+                            script: "git diff --name-only origin/${base_branch}..${local_branch}",
+                            returnStdout: true
+                        ).trim()
                 }
+                println "Base branch is ${base_branch}"
             }
             stage('Hello')
             {
