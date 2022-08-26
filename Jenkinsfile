@@ -1,5 +1,12 @@
 // Pipeline starts here
 
+def local_branch = sh (
+        script: "git rev-parse --abbrev-ref HEAD",
+        label: "Getting current branch name",
+        returnStdout: true
+    ).trim()
+    println "Local branch is ${local_branch}"
+
 pipeline {
     agent any
     options {
