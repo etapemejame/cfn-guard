@@ -5,7 +5,7 @@ import org.jenkinci.plugins.pipeline.modeldefinition.Utils
 
 def base_branch = 'main'
 pipeline {
-    agent any
+    agent { local 'linux' }
     options {
         timestamps()
     }
