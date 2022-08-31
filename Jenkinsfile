@@ -58,7 +58,7 @@ pipeline {
                     }
                     withAWS(region:'us-west-2',credentials:'aws'){
                         sh 'echo "Uploading content with AWS creds"'
-                        s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file: "${file.editType.name} ${file.path}", bucket: "blek-jenkins-upload-us-west-2")
+                        s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file: "`pwd`/cfn_templates/os_domain.yaml", bucket: "blek-jenkins-upload-us-west-2")
                     }
                 }
             }
