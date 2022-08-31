@@ -35,13 +35,14 @@ pipeline {
             {
                 script 
                 {   
-                    echo "Hello World. This is a test Jenkins Pipeline"
-                    sh "curl https://sh.rustup.rs -sSf | sh -s -- -y"
-                    sh "curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/aws-cloudformation/cloudformation-guard/main/install-guard.sh | sh"
-                    sh "sudo cp ~/.guard/bin/cfn-guard /usr/local/bin"
-                    echo "PATH=$PATH:~/.guard/bin/"
-                    sh "cfn-guard --version"
-                    sh "cfn-guard validate -r rule.guard -d os_domain.yaml"
+                    sh "docker pull etapeblek/cfn-guard:v2.0.4"
+                    // echo "Hello World. This is a test Jenkins Pipeline"
+                    // sh "curl https://sh.rustup.rs -sSf | sh -s -- -y"
+                    // sh "curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/aws-cloudformation/cloudformation-guard/main/install-guard.sh | sh"
+                    // sh "sudo cp ~/.guard/bin/cfn-guard /usr/local/bin"
+                    // echo "PATH=$PATH:~/.guard/bin/"
+                    // sh "cfn-guard --version"
+                    sh "docker run -it --mount type=bind,source=`pwd`,target=/opt/rules etapeblek/cfn-guard:v2.0.4 validate -r /opt/rules/rule.guard -d /opt/rules/os_domain.yaml"
                 }
             }
         }
