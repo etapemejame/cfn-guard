@@ -34,12 +34,10 @@ pipeline {
             steps
             {
                 script{
-                    def local_branch = sh (
-                        script: "git rev-parse --abbrev-ref HEAD",
-                        label: "Getting current branch name",
-                        returnStdout: true
-                    ).trim()
-                    println "Local branch is ${local_branch}"
+                    def changedFiles = pullRequest.files.collect {
+                        it.getFilename()
+                    }
+                    println "These are updated files: ${changedFiles}"
                 }
             }
         }

@@ -10,4 +10,5 @@ Resources:
           Value: ""
       EBSOptions:
         EBSEnabled: true
+        VolumeSize: 100
   
