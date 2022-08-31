@@ -56,7 +56,7 @@ pipeline {
                     // sh "sudo cp ~/.guard/bin/cfn-guard /usr/local/bin"
                     // echo "PATH=$PATH:~/.guard/bin/"
                     // sh "cfn-guard --version"
-                    sh "docker run -i --mount type=bind,source=`pwd`,target=/opt/rules etapeblek/cfn-guard:v2.0.4 validate -r /opt/rules/rule.guard -d /opt/rules/os_domain.yaml"
+                    sh "docker run -i --mount type=bind,source=`pwd`/rules,target=/opt/rules --mount type=bind,source=`pwd`/cfn_templates,target=/opt/tests etapeblek/cfn-guard:v2.0.4 validate -r /opt/rules/rule.guard -d /opt/tests/os_domain.yaml"
                 }
             }
         }
