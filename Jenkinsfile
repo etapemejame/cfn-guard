@@ -9,17 +9,25 @@ pipeline {
     options {
         timestamps()
     }
+    def changeLogSets = currentBuild.changeSets
     node
     {
         stages 
         {
             stage('print-filename') {
                 script {
-                    sh script: "git fetch origin --no-tags ${base_branch}", label: "Getting base branch"
-                    def git_diff = sh (
-                            script: "git diff --name-only origin/${base_branch}..${local_branch}",
-                            returnStdout: true
-                        ).trim()
+                    for (int i = 0; i < changeLogSets.size(); i++) {
+                        def entries = changeLogSets[i].items
+                        for (int j = 0; j < entries.length; j++) {
+                            def entry = entries[j]
+                            echo "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}"
+                            def files = new ArrayList(entry.affectedFiles)
+                            for (int k = 0; k < files.size(); k++) {
+                                def file = files[k]
+                                echo "  ${file.editType.name} ${file.path}"
+                            }
+                        }
+                    }
                 }
                 println "Base branch is ${base_branch}"
             }
