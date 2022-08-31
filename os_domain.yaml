@@ -9,5 +9,5 @@ Resources:
         - Key: Owner 
           Value: ""
       EBSOptions:
-        EBSEnabled: false
+        EBSEnabled: true
   
