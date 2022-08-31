@@ -36,8 +36,6 @@ pipeline {
                 script 
                 {   
                     echo "Hello World. This is a test Jenkins Pipeline"
-                    sh "yum update"
-                    sh "yum install curl -y"
                     sh "curl https://sh.rustup.rs -sSf | sh -s -- -y"
                     sh "curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/aws-cloudformation/cloudformation-guard/main/install-guard.sh | sh"
                     sh "cp ~/.guard/bin/cfn-guard /usr/local/bin"
