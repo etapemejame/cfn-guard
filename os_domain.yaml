@@ -8,4 +8,6 @@ Resources:
           Value: ""
         - Key: Owner 
           Value: ""
+      EBSOptions:
+        EBSEnable: false
   
