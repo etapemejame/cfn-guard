@@ -1,34 +1,48 @@
+#!groovy
+
 // Pipeline starts here
-
-def local_branch = sh (
-        script: "git rev-parse --abbrev-ref HEAD",
-        label: "Getting current branch name",
-        returnStdout: true
-    ).trim()
-    println "Local branch is ${local_branch}"
-
 pipeline {
-    agent any
+    agent {label "linux"}
     options {
         timestamps()
     }
     stages 
     {
-        stage('Hello')
+        stage('get-filename') {
+            steps
+            {
+                script
+                {
+                    def changeLogSets = currentBuild.changeSets
+                    for (int i = 0; i < changeLogSets.size(); i++) {
+                        def entries = changeLogSets[i].items
+                        for (int j = 0; j < entries.length; j++) {
+                            def entry = entries[j]
+                            echo "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}"
+                            def files = new ArrayList(entry.affectedFiles)
+                            for (int k = 0; k < files.size(); k++) {
+                                def file = files[k]
+                                echo "  ${file.editType.name} ${file.path}"
+                            }
+                        }
+                    }
+                }
+            } 
+        }
+        stage('Validate-Templates')
         {
             steps
             {
                 script 
-                {   checkout scm
-                    echo "Hello World. This is a test Jenkins Pipeline"
-                    sh "sudo yum update"
-                    sh "sudo yum install curl -y"
-                    sh "curl -o /tmp/sh.rustup.rs -sSf https://sh.rustup.rs && sh /tmp/sh.rustup.rs -y"
-                    sh "curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/aws-cloudformation/cloudformation-guard/main/install-guard.sh | sh"
-                    sh "sudo cp ~/.guard/bin/cfn-guard /usr/local/bin"
-                    sh "export PATH=$PATH:~/.guard/bin/"
-                    sh "cfn-guard --version"
-                    sh "cfn-guard validate -r rule.guard -d os_domain.yaml"
+                {   
+                    sh "docker pull etapeblek/cfn-guard:v2.0.4"
+                    // echo "Hello World. This is a test Jenkins Pipeline"
+                    // sh "curl https://sh.rustup.rs -sSf | sh -s -- -y"
+                    // sh "curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/aws-cloudformation/cloudformation-guard/main/install-guard.sh | sh"
+                    // sh "sudo cp ~/.guard/bin/cfn-guard /usr/local/bin"
+                    // echo "PATH=$PATH:~/.guard/bin/"
+                    // sh "cfn-guard --version"
+                    sh "docker run -i --mount type=bind,source=`pwd`/rules,target=/opt/rules --mount type=bind,source=`pwd`/cfn_templates,target=/opt/tests etapeblek/cfn-guard:v2.0.4 validate -r /opt/rules/rule.guard -d /opt/tests/os_domain.yaml"
                 }
             }
         }

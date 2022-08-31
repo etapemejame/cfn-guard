@@ -1,7 +1,0 @@
-let check_required_tags = Resources.*[ Type == 'AWS::OpenSearchService::Domain' ]
-
-rule validate_tags WHEN %check_required_tags !EMPTY {
-    %check_required_tags.Properties{
-        Tags[*]['Key'] IN ['Service', 'Owner']
-    }
-}

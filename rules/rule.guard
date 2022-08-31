@@ -1,0 +1,13 @@
+let opensearch_domain = Resources.*[ Type == 'AWS::OpenSearchService::Domain' ]
+
+rule validate_tags WHEN %opensearch_domain !EMPTY {
+    %opensearch_domain.Properties{
+        Tags[*]['Key'] IN ['Service', 'Owner']
+    }
+}
+
+rule check_ebs_options when %opensearch_domain !EMPTY {
+    %opensearch_domain {
+        Properties.EBSOptions.EBSEnabled == true
+    }
+}

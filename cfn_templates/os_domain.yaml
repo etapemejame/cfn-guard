@@ -8,4 +8,7 @@ Resources:
           Value: ""
         - Key: Owner 
           Value: ""
+      EBSOptions:
+        EBSEnabled: true
+        VolumeSize: 100
   
