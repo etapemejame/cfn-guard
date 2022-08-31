@@ -1,5 +1,4 @@
 #!groovy
-import org.jenkinci.plugins.pipeline.modeldefinition.Utils
 
 // Pipeline starts here
 pipeline {
