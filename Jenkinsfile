@@ -29,7 +29,7 @@ pipeline {
                 }
             } 
         }
-        stage
+        stage('get-local-branch')
         {
             steps
             {
@@ -43,7 +43,7 @@ pipeline {
                 }
             }
         }
-        stage('Hello')
+        stage('Validate-Templates')
         {
             steps
             {
