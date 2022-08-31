@@ -29,6 +29,20 @@ pipeline {
                 }
             } 
         }
+        stage
+        {
+            steps
+            {
+                script{
+                    def local_branch = sh (
+                        script: "git rev-parse --abbrev-ref HEAD",
+                        label: "Getting current branch name",
+                        returnStdout: true
+                    ).trim()
+                    println "Local branch is ${local_branch}"
+                }
+            }
+        }
         stage('Hello')
         {
             steps
