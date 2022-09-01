@@ -1,6 +1,8 @@
 #!groovy
 
 // Pipeline starts here
+def MODIFIED_FILE = "payload.head_commit.modified"
+echo "Recently modified file is ${MODIFIED_FILE}"
 pipeline {
     agent {label "linux"}
     options {
@@ -56,10 +58,10 @@ pipeline {
                             }
                         }
                     }
-                    withAWS(region:'us-west-2',credentials:'aws'){
-                        sh 'echo "Uploading content with AWS creds"'
-                        s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file: "`pwd`/cfn_templates/os_domain.yaml", bucket: "blek-jenkins-upload-us-west-2")
-                    }
+                    // withAWS(region:'us-west-2',credentials:'aws'){
+                    //     sh 'echo "Uploading content with AWS creds"'
+                    //     s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file: "`pwd`/cfn_templates/os_domain.yaml", bucket: "blek-jenkins-upload-us-west-2")
+                    // }
                 }
             }
         }
