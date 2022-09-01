@@ -1,7 +1,7 @@
 #!groovy
 
 // Pipeline starts here
-def MODIFIED_FILE = "payload.head_commit.modified"
+def MODIFIED_FILE = currentBuild.changeSets
 echo "Recently modified file is ${MODIFIED_FILE}"
 pipeline {
     agent {label "linux"}
