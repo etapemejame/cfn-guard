@@ -1,8 +1,31 @@
 #!groovy
+import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
+
+boolean validate = true
+boolean test = false
+
+def MY_REPO = "cfn-guard"
+def ORG_NAME = "etapemejame"
+
+def ENVIRONMENTS = [
+    "sandbox": [
+        "label": "blek_sandbox_account",
+        "validate": true,
+        "test": false
+    ],
+    "dev": [
+        "label": "blek_dev_account",
+        "validate": true,
+        "test": false
+    ],
+    "prod": [
+        "label": "blek_prod_account",
+        "validate": false,
+        "test": false
+    ]
+]
 
 // Pipeline starts here
-def MODIFIED_FILE = currentBuild.changeSets
-echo "Recently modified file is ${MODIFIED_FILE}"
 pipeline {
     agent {label "linux"}
     options {
@@ -31,6 +54,20 @@ pipeline {
                 }
             } 
         }
+        ENVIRONMENTS.eachWithIndex { element, index ->
+            stage(element.key) {
+                if(env.GITHUB_REPO != null) {
+                    if(env.JOB_NAME == "${ORG_NAME}/${MY_REPO}" &&
+                       env.GITHUB_PROJECT == "${ORG_NAME}" &&
+                       env.GITHUB_ORG == "${ORG_NAME}") {
+                        isPush = env.GITHUB_PUSH != null && env.GITHUB_PUSH != "false"
+                        echo element.key
+                       }
+                }
+            }
+
+        }
+
         stage('Validate-Templates')
         {
             steps
@@ -38,12 +75,6 @@ pipeline {
                 script 
                 {   
                     sh "docker pull etapeblek/cfn-guard:v2.0.4"
-                    // echo "Hello World. This is a test Jenkins Pipeline"
-                    // sh "curl https://sh.rustup.rs -sSf | sh -s -- -y"
-                    // sh "curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/aws-cloudformation/cloudformation-guard/main/install-guard.sh | sh"
-                    // sh "sudo cp ~/.guard/bin/cfn-guard /usr/local/bin"
-                    // echo "PATH=$PATH:~/.guard/bin/"
-                    // sh "cfn-guard --version"
                     sh "docker run -i --mount type=bind,source=`pwd`/rules,target=/opt/rules --mount type=bind,source=`pwd`/cfn_templates,target=/opt/tests etapeblek/cfn-guard:v2.0.4 validate -r /opt/rules/rule.guard -d /opt/tests/os_domain.yaml"
                     def changeLogSets = currentBuild.changeSets
                     for (int i = 0; i < changeLogSets.size(); i++) {
