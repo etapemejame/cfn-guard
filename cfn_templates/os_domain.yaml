@@ -10,5 +10,5 @@ Resources:
           Value: ""
       EBSOptions:
         EBSEnabled: true
-        VolumeSize: 70
+        VolumeSize: 100
   
