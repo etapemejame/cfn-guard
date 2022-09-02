@@ -61,7 +61,7 @@ pipeline {
                 script 
                 {
                     ENVIRONMENTS.eachWithIndex { element, index ->
-                        element.key {
+                        element.getKey{
                             if(env.GITHUB_REPO != null) {
                                 if(env.JOB_NAME == "${ORG_NAME}/${MY_REPO}" &&
                                 env.GITHUB_PROJECT == "${ORG_NAME}" &&
