@@ -61,6 +61,8 @@ pipeline {
             {
                 script 
                 {   
+                    sh "docker pull etapeblek/cfn-guard:v2.0.4"
+                    sh "docker run -i --mount type=bind,source=`pwd`/rules,target=/opt/rules --mount type=bind,source=`pwd`/cfn_templates,target=/opt/tests etapeblek/cfn-guard:v2.0.4 validate -r /opt/rules/rule.guard -d /opt/tests/os_domain.yaml"
                     def changeLogSets = currentBuild.changeSets
                     for (int i = 0; i < changeLogSets.size(); i++) {
                         def entries = changeLogSets[i].items
@@ -71,14 +73,12 @@ pipeline {
                             for (int k = 0; k < files.size(); k++) {
                                 def file = files[k]
                                 echo "  ${file.editType.name} ${file.path}"
+                                withAWS(region:'us-west-2',credentials:'aws'){
+                                    sh 'echo "Uploading content with AWS creds"'
+                                    s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file: "${file.editType.name}", bucket: "blek-jenkins-upload-us-west-2")
+                                }
                             }
                         }
-                    }
-                    sh "docker pull etapeblek/cfn-guard:v2.0.4"
-                    sh "docker run -i --mount type=bind,source=`pwd`/rules,target=/opt/rules --mount type=bind,source=`pwd`/cfn_templates,target=/opt/tests etapeblek/cfn-guard:v2.0.4 validate -r /opt/rules/rule.guard -d /opt/tests/os_domain.yaml"
-                    withAWS(region:'us-west-2',credentials:'aws'){
-                        sh 'echo "Uploading content with AWS creds"'
-                        s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file: "${file.editType.name}", bucket: "blek-jenkins-upload-us-west-2")
                     }
                 }
             }
