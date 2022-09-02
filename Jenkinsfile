@@ -25,7 +25,7 @@ def ENVIRONMENTS = [
     ]
 ]
 
-def FILE_TO_UPLOAD = "`pwd`/cfn_templates/os_domain.yaml"
+def FILE_TO_UPLOAD = "./cfn_templates/os_domain.yaml"
 // Pipeline starts here
 pipeline {
     agent {label "linux"}
