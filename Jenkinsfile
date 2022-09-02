@@ -25,8 +25,7 @@ def ENVIRONMENTS = [
     ]
 ]
 
-echo env.GITHUB_REPO
-echo env.GITHUB_PROJECT
+def FILE_TO_UPLOAD = "`pwd`/cfn_templates/os_domain.yaml"
 // Pipeline starts here
 pipeline {
     agent {label "linux"}
@@ -66,7 +65,7 @@ pipeline {
                     sh "docker run -i --mount type=bind,source=`pwd`/rules,target=/opt/rules --mount type=bind,source=`pwd`/cfn_templates,target=/opt/tests etapeblek/cfn-guard:v2.0.4 validate -r /opt/rules/rule.guard -d /opt/tests/os_domain.yaml"
                     withAWS(region:'us-west-2',credentials:'aws'){
                         sh 'echo "Uploading content with AWS creds"'
-                        s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file: "`pwd`/cfn_templates/os_domain.yaml", bucket: "blek-jenkins-upload-us-west-2")
+                        s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file: "${FILE_TO_UPLOAD}", bucket: "blek-jenkins-upload-us-west-2")
                     }
                 }
             }
