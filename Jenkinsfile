@@ -55,17 +55,18 @@ pipeline {
             } 
         }
         ENVIRONMENTS.eachWithIndex { element, index ->
-            stage(element.key) {
-                if(env.GITHUB_REPO != null) {
-                    if(env.JOB_NAME == "${ORG_NAME}/${MY_REPO}" &&
-                       env.GITHUB_PROJECT == "${ORG_NAME}" &&
-                       env.GITHUB_ORG == "${ORG_NAME}") {
-                        isPush = env.GITHUB_PUSH != null && env.GITHUB_PUSH != "false"
-                        echo element.key
-                       }
+            stages {
+                    stage(element.key) {
+                    if(env.GITHUB_REPO != null) {
+                        if(env.JOB_NAME == "${ORG_NAME}/${MY_REPO}" &&
+                        env.GITHUB_PROJECT == "${ORG_NAME}" &&
+                        env.GITHUB_ORG == "${ORG_NAME}") {
+                            isPush = env.GITHUB_PUSH != null && env.GITHUB_PUSH != "false"
+                            echo element.key
+                        }
+                    }
                 }
             }
-
         }
 
         stage('Validate-Templates')
