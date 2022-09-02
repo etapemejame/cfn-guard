@@ -25,6 +25,8 @@ def ENVIRONMENTS = [
     ]
 ]
 
+echo env.GITHUB_REPO
+echo env.GITHUB_PROJECT
 // Pipeline starts here
 pipeline {
     agent {label "linux"}
@@ -54,28 +56,6 @@ pipeline {
                 }
             } 
         }
-        stage('envs')
-        {
-            steps 
-            {
-                script 
-                {
-                    ENVIRONMENTS.eachWithIndex { element, index ->
-                        element {
-                            if(env.GITHUB_REPO != null) {
-                                if(env.JOB_NAME == "${ORG_NAME}/${MY_REPO}" &&
-                                env.GITHUB_PROJECT == "${ORG_NAME}" &&
-                                env.GITHUB_ORG == "${ORG_NAME}") {
-                                isPush = env.GITHUB_PUSH != null && env.GITHUB_PUSH != "false"
-                                echo element
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
         stage('Validate-Templates')
         {
             steps
@@ -84,23 +64,10 @@ pipeline {
                 {   
                     sh "docker pull etapeblek/cfn-guard:v2.0.4"
                     sh "docker run -i --mount type=bind,source=`pwd`/rules,target=/opt/rules --mount type=bind,source=`pwd`/cfn_templates,target=/opt/tests etapeblek/cfn-guard:v2.0.4 validate -r /opt/rules/rule.guard -d /opt/tests/os_domain.yaml"
-                    def changeLogSets = currentBuild.changeSets
-                    for (int i = 0; i < changeLogSets.size(); i++) {
-                        def entries = changeLogSets[i].items
-                        for (int j = 0; j < entries.length; j++) {
-                            def entry = entries[j]
-                            echo "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}"
-                            def files = new ArrayList(entry.affectedFiles)
-                            for (int k = 0; k < files.size(); k++) {
-                                def file = files[k]
-                                echo "  ${file.editType.name} ${file.path}"
-                            }
-                        }
+                    withAWS(region:'us-west-2',credentials:'aws'){
+                        sh 'echo "Uploading content with AWS creds"'
+                        s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file: "`pwd`/cfn_templates/os_domain.yaml", bucket: "blek-jenkins-upload-us-west-2")
                     }
-                    // withAWS(region:'us-west-2',credentials:'aws'){
-                    //     sh 'echo "Uploading content with AWS creds"'
-                    //     s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file: "`pwd`/cfn_templates/os_domain.yaml", bucket: "blek-jenkins-upload-us-west-2")
-                    // }
                 }
             }
         }
