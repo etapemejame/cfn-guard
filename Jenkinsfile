@@ -70,7 +70,7 @@ pipeline {
             }
         }
         showChangeLogs()
-        @NonCPS
+        // @NonCPS
         def showChangeLogs() {
         def changeLogSets = currentBuild.rawBuild.changeSets
         for (int i = 0; i < changeLogSets.size(); i++) {
