@@ -76,7 +76,7 @@ pipeline {
         {
             steps {
                 script {
-                    dir(`pwd`/cfn_templates) {
+                    dir(cfn_templates/) {
                         pwd();
                         withAWS(region:"${AWS_REGION}",credentials:'aws') {
                             sh 'echo "Uploading content with AWS creds"'
