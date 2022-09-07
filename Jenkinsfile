@@ -1,7 +1,7 @@
 #!groovy
 import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
-import hudson.scm.ChangeLogSet.size
-import hudson.scm.path
+import hudson.scm.ChangeLogSet.AffectedFiles.size
+import hudson.scm.ChangeLogSet.AffectedFiles.path
 
 boolean validate = true
 boolean test = false
