@@ -69,7 +69,7 @@ pipeline {
                     def changeLogSets = currentBuild.changeSets 
                     for (int i = 0; i < changeLogSets.size(); i++) {
                     def entries = changeLogSets[i].items
-                    echo "${entries}"
+                    echo changeLogSets[i].items
                     }
                 }
             }
