@@ -79,7 +79,7 @@ pipeline {
                         pwd();
                         withAWS(region:"${AWS_REGION}",credentials:'aws') {
                             sh 'echo "Uploading content with AWS creds"'
-                            s3Upload(bucket:"${S3_BUCKET_NAME}", workingDir:'./', includePathPattern: '**/**')
+                            s3Upload(bucket:"${S3_BUCKET_NAME}", workingDir:'./', includePathPattern: 'cfn_templates/**')
                             // s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file: "${FOLDER_PATH}", bucket: "${S3_BUCKET_NAME}")
                         }    
                     }
