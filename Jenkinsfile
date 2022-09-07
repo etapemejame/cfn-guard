@@ -64,7 +64,6 @@ pipeline {
         {
             steps
             {
-                
                 script 
                 {   
                     sh "docker pull etapeblek/cfn-guard:v2.0.4"
@@ -81,7 +80,8 @@ pipeline {
                         withAWS(region:"${AWS_REGION}",credentials:'aws') {
                             sh 'echo "Uploading content with AWS creds"'
                             s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file: "${FOLDER_PATH}", bucket: "${S3_BUCKET_NAME}", includePathPattern: '**/*')
-                        }
+                        }    
+                    }
                 }
             }
         }
