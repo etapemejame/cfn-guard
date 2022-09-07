@@ -8,6 +8,8 @@ boolean test = false
 
 def MY_REPO = "cfn-guard"
 def ORG_NAME = "etapemejame"
+def AWS_REGION ="us-west-2"
+def S3_BUCKET_NAME = "blek-jenkins-upload-us-west-2"
 
 def ENVIRONMENTS = [
     "sandbox": [
@@ -27,7 +29,7 @@ def ENVIRONMENTS = [
     ]
 ]
 
-def FILE_TO_UPLOAD = "./cfn_templates/os_domain.yaml"
+def FOLDER_PATH = "./cfn_templates"
 
 // Pipeline starts here
 pipeline {
@@ -67,17 +69,19 @@ pipeline {
                 {   
                     sh "docker pull etapeblek/cfn-guard:v2.0.4"
                     sh "docker run -i --mount type=bind,source=`pwd`/rules,target=/opt/rules --mount type=bind,source=`pwd`/cfn_templates,target=/opt/tests etapeblek/cfn-guard:v2.0.4 validate -r /opt/rules/rule.guard -d /opt/tests/os_domain.yaml"
-                    
-                    def changeLogSets = currentBuild.changeSets 
-                    for (int i = 0; i < changeLogSets.size(); i++) {
-                        def entries = changeLogSets[i].items
-                        for (int j = 0; j < entries.length; j++) {
-                            def entry = entries[j]
-                            echo "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}"
-                            def files = new ArrayList(entry.affectedFiles)
-                            echo "Modified files: ${files}"
+                }
+            }
+        }
+        stage('upload-to-s3')
+        {
+            steps {
+                script {
+                    dir(./cfn_templates) {
+                        pwd();
+                        withAWS(region:"${AWS_REGION}",credentials:'aws') {
+                            sh 'echo "Uploading content with AWS creds"'
+                            s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file: "${FOLDER_PATH}", bucket: "${S3_BUCKET_NAME}", includePathPattern: '**/*')
                         }
-                    }
                 }
             }
         }
