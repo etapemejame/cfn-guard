@@ -75,7 +75,7 @@ pipeline {
             steps {
                 script {
                     sh ""
-                    sh "aws s3 sync $WORKSPACE/rules s3://${S3_BUCKET_NAME} --include '**/*'"
+                    sh "aws s3 sync $WORKSPACE/rules s3://${S3_BUCKET_NAME} --include '*'"
                     // dir('./') {
                     //     pwd();
                     //     withAWS(region:"${AWS_REGION}",credentials:'aws') {
