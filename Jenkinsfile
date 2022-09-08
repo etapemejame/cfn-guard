@@ -1,8 +1,6 @@
 #!groovy
 import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 import hudson.scm.*
-import org.jenkinsci.plugins.pipeline.aws.steps
-
 
 boolean validate = true
 boolean test = false
